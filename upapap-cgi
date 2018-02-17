@@ -46,12 +46,14 @@ try:
         soup = BeautifulSoup(req.content, 'lxml')
         response += parse_lolol(soup)
 
-    print('Content-Type: text/markdown')
-    print('')
-    print(response.rstrip())
+    if not response:
+        raise Exception('Empty response from upstream server')
+
+    response = 'Content-Type: text/markdown; charset=utf-8\n\n' + response
+    print(response.rstrip().encode('utf-8'))
 
 except Exception as e:
     print('Status: 500 Internal Server Error')
-    print('Content-Type: text/plain')
+    print('Content-Type: text/plain; charset=utf-8')
     print('')
     print('Error: %s' % str(e))

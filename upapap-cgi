@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+# encoding: utf-8 (as per PEP 263)
+
+try:
+    import requests
+    import requests_cache
+    from bs4 import BeautifulSoup
+
+    requests_cache.install_cache('/tmp/upapap-cache', backend='sqlite', expire_after=900)
+
+    def parse_lolol(soup):
+        """Parse list of lists of links. Requires full page soup as input."""
+
+        response = ''
+
+        pagetitle = soup.find('header', {'class': 'up-page-content-pagetitle'}).find('h1').get_text()
+        response += '# %s\n' % pagetitle
+        response += '\n'
+
+        content = soup.find('div', {'class': 'up-page-content-column-center'})
+
+        for l in content.find_all('ul'):
+            heading = l.find_previous(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).get_text()
+            response += '## %s\n' % heading
+            for i in l.find_all('li'):
+                text = i.get_text()
+                href = i.find('a').attrs['href']
+                if not href.startswith('http://'):
+                    href = 'http://www.fim.uni-passau.de/' + href
+                response += '* %s  \n  %s\n' % (text, href)
+            response += '\n'
+
+        return response
+
+
+    urls = [
+        'http://www.fim.uni-passau.de/studium/modulkataloge/',
+        'http://www.fim.uni-passau.de/index.php?id=17010',
+        'http://www.fim.uni-passau.de/ueber-die-fakultaet/ausschuesse/pruefungsausschuss/',
+    ]
+
+    response = ''
+    for url in urls:
+        req = requests.get(url)
+        soup = BeautifulSoup(req.content, 'lxml')
+        response += parse_lolol(soup)
+
+    print('Content-Type: text/markdown')
+    print('')
+    print(response)
+
+except Exception as e:
+    print('Status: 500 Internal Server Error')
+    print('Content-Type: text/plain')
+    print('')
+    print('Error: %s' % str(e))

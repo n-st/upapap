@@ -37,6 +37,7 @@ try:
         'http://www.fim.uni-passau.de/studium/modulkataloge/',
         'http://www.fim.uni-passau.de/index.php?id=17010',
         'http://www.fim.uni-passau.de/ueber-die-fakultaet/ausschuesse/pruefungsausschuss/',
+        'http://www.fim.uni-passau.de/studium/pruefungsordnungen/',
     ]
 
     response = ''

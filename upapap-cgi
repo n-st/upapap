@@ -47,7 +47,7 @@ try:
 
     print('Content-Type: text/markdown')
     print('')
-    print(response)
+    print(response.rstrip())
 
 except Exception as e:
     print('Status: 500 Internal Server Error')

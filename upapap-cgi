@@ -8,13 +8,14 @@ try:
 
     requests_cache.install_cache('/tmp/upapap-cache', backend='sqlite', expire_after=900)
 
-    def parse_lolol(soup):
+    def parse_lolol(url, soup):
         """Parse list of lists of links. Requires full page soup as input."""
 
         response = ''
 
         pagetitle = soup.find('header', {'class': 'up-page-content-pagetitle'}).find('h1').get_text()
         response += '# %s\n' % pagetitle
+        response += '%s\n' % url
         response += '\n'
 
         content = soup.find('div', {'class': 'up-page-content-column-center'})
@@ -44,7 +45,7 @@ try:
     for url in urls:
         req = requests.get(url)
         soup = BeautifulSoup(req.content, 'lxml')
-        response += parse_lolol(soup)
+        response += parse_lolol(url, soup)
 
     if not response:
         raise Exception('Empty response from upstream server')

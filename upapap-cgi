@@ -25,10 +25,14 @@ try:
             response += '## %s\n' % heading
             for i in l.find_all('li'):
                 text = i.get_text()
-                href = i.find('a').attrs['href']
-                if not href.startswith('http://'):
-                    href = 'http://www.fim.uni-passau.de/' + href
-                response += '* %s  \n  %s\n' % (text, href)
+                a = i.find('a')
+                if not a:
+                    response += '* %s  \n' % (text)
+                else:
+                    href = i.find('a').attrs['href']
+                    if not href.startswith('http://'):
+                        href = 'http://www.fim.uni-passau.de/' + href
+                    response += '* %s  \n  %s\n' % (text, href)
             response += '\n'
 
         return response

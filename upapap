@@ -26,10 +26,14 @@ def parse_lolol(soup):
         print('## %s' % heading)
         for i in l.find_all('li'):
             text = i.get_text()
-            href = i.find('a').attrs['href']
-            if not href.startswith('http://'):
-                href = 'http://www.fim.uni-passau.de/' + href
-            print('* %s  \n  %s' % (text, href))
+            a = i.find('a')
+            if not a:
+                print('* %s  ' % (text))
+            else:
+                href = i.find('a').attrs['href']
+                if not href.startswith('http://'):
+                    href = 'http://www.fim.uni-passau.de/' + href
+                print('* %s  \n  %s' % (text, href))
         print()
 
 def main():

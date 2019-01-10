@@ -30,6 +30,7 @@ try:
                 response += '<h2>%s</h2>\n' % heading
             else:
                 response += '## %s\n' % heading
+
             elems = l.find_all('li')
             if elems and html:
                 response += '<ul>\n'

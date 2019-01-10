@@ -35,7 +35,7 @@ try:
             if elems and html:
                 response += '<ul>\n'
             for i in elems:
-                text = i.get_text()
+                text = i.get_text().strip()
                 a = i.find('a')
                 if not a:
                     if html:

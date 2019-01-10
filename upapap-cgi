@@ -13,7 +13,7 @@ try:
 
         response = ''
 
-        pagetitle = soup.find('header', {'class': 'up-page-content-pagetitle'}).find('h1').get_text()
+        pagetitle = soup.find('header', {'class': 'up-page-content-pagetitle'}).find('h1').get_text().strip()
         response += '# %s\n' % pagetitle
         response += '%s\n' % url
         response += '\n'
@@ -21,7 +21,7 @@ try:
         content = soup.find('div', {'class': 'up-page-content-column-center'})
 
         for l in content.find_all('ul'):
-            heading = l.find_previous(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).get_text()
+            heading = l.find_previous(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).get_text().strip()
             response += '## %s\n' % heading
             for i in l.find_all('li'):
                 text = i.get_text()

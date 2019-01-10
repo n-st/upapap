@@ -2,37 +2,55 @@
 # encoding: utf-8 (as per PEP 263)
 
 try:
+    import os
     import requests
     import requests_cache
     from bs4 import BeautifulSoup
 
     requests_cache.install_cache('/tmp/upapap-cache', backend='sqlite', expire_after=900)
 
-    def parse_lolol(url, soup):
+    def parse_lolol(url, soup, html=False):
         """Parse list of lists of links. Requires full page soup as input."""
 
         response = ''
 
         pagetitle = soup.find('header', {'class': 'up-page-content-pagetitle'}).find('h1').get_text().strip()
-        response += '# %s\n' % pagetitle
-        response += '%s\n' % url
+        if html:
+            response += '<a href="%s"><h1>%s</h1></a>\n' % (url, pagetitle)
+        else:
+            response += '# %s\n' % pagetitle
+            response += '%s\n' % url
         response += '\n'
 
         content = soup.find('div', {'class': 'up-page-content-column-center'})
 
         for l in content.find_all('ul'):
             heading = l.find_previous(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).get_text().strip()
-            response += '## %s\n' % heading
-            for i in l.find_all('li'):
+            if html:
+                response += '<h2>%s</h2>\n' % heading
+            else:
+                response += '## %s\n' % heading
+            elems = l.find_all('li')
+            if elems and html:
+                response += '<ul>\n'
+            for i in elems:
                 text = i.get_text()
                 a = i.find('a')
                 if not a:
-                    response += '* %s  \n' % (text)
+                    if html:
+                        response += '<li>%s</li>\n' % (text)
+                    else:
+                        response += '* %s  \n' % (text)
                 else:
                     href = i.find('a').attrs['href']
                     if not href.startswith('http://'):
                         href = 'http://www.fim.uni-passau.de/' + href
-                    response += '* %s  \n  %s\n' % (text, href)
+                    if html:
+                        response += '<li><a href="%s">%s</a></li>\n' % (href, text)
+                    else:
+                        response += '* %s  \n  %s\n' % (text, href)
+            if elems and html:
+                response += '</ul>\n'
             response += '\n'
 
         return response
@@ -45,16 +63,22 @@ try:
         'http://www.fim.uni-passau.de/studium/pruefungsordnungen/',
     ]
 
+    script_name = os.environ['SCRIPT_NAME']
+    html = script_name.endswith('.html')
+
     response = ''
     for url in urls:
         req = requests.get(url)
         soup = BeautifulSoup(req.content, 'lxml')
-        response += parse_lolol(url, soup)
+        response += parse_lolol(url, soup, html)
 
     if not response:
         raise Exception('Empty response from upstream server')
 
-    response = 'Content-Type: text/markdown; charset=utf-8\n\n' + response
+    if html:
+        response = 'Content-Type: text/html; charset=utf-8\n\n' + response
+    else:
+        response = 'Content-Type: text/markdown; charset=utf-8\n\n' + response
     print(response.rstrip().encode('utf-8'))
 
 except Exception as e:

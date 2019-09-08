@@ -7,9 +7,9 @@ import requests
 from bs4 import BeautifulSoup
 
 urls = [
-    'http://www.fim.uni-passau.de/studium/modulkataloge/',
-    'http://www.fim.uni-passau.de/index.php?id=17010',
-    'http://www.fim.uni-passau.de/ueber-die-fakultaet/ausschuesse/pruefungsausschuss/',
+    'https://www.fim.uni-passau.de/studium/modulkataloge/',
+    'https://www.fim.uni-passau.de/index.php?id=17010',
+    'https://www.fim.uni-passau.de/ueber-die-fakultaet/ausschuesse/pruefungsausschuss/',
 ]
 
 def parse_lolol(soup):
@@ -32,7 +32,9 @@ def parse_lolol(soup):
             else:
                 href = i.find('a').attrs['href']
                 if not href.startswith('http://') and not href.startswith('https://'):
-                    href = 'http://www.fim.uni-passau.de/' + href
+                    if not href.startswith('/'):
+                        href = '/' + href
+                    href = 'https://www.fim.uni-passau.de' + href
                 print('* %s  \n  %s' % (text, href))
         print()
 

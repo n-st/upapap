@@ -45,7 +45,9 @@ try:
                 else:
                     href = i.find('a').attrs['href']
                     if not href.startswith('http://') and not href.startswith('https://'):
-                        href = 'http://www.fim.uni-passau.de/' + href
+                        if not href.startswith('/'):
+                            href = '/' + href
+                        href = 'https://www.fim.uni-passau.de/' + href
                     if html:
                         response += '<li><a href="%s">%s</a></li>\n' % (href, text)
                     else:
@@ -58,10 +60,10 @@ try:
 
 
     urls = [
-        'http://www.fim.uni-passau.de/studium/modulkataloge/',
-        'http://www.fim.uni-passau.de/index.php?id=17010',
-        'http://www.fim.uni-passau.de/ueber-die-fakultaet/ausschuesse/pruefungsausschuss/',
-        'http://www.fim.uni-passau.de/studium/pruefungsordnungen/',
+        'https://www.fim.uni-passau.de/studium/modulkataloge/',
+        'https://www.fim.uni-passau.de/index.php?id=17010',
+        'https://www.fim.uni-passau.de/ueber-die-fakultaet/ausschuesse/pruefungsausschuss/',
+        'https://www.fim.uni-passau.de/studium/pruefungsordnungen/',
     ]
 
     script_name = os.environ['SCRIPT_NAME']

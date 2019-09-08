@@ -10,6 +10,7 @@ urls = [
     'https://www.fim.uni-passau.de/studium/modulkataloge/',
     'https://www.fim.uni-passau.de/index.php?id=17010',
     'https://www.fim.uni-passau.de/ueber-die-fakultaet/ausschuesse/pruefungsausschuss/',
+    'https://www.fim.uni-passau.de/studium/pruefungsordnungen/',
 ]
 
 def parse_lolol(soup):

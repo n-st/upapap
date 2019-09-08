@@ -26,18 +26,24 @@ try:
         content = soup.find('main')
 
         last_heading = ""
+        close_ul = False
         for l in content.find_all('ul'):
             heading = l.find_previous(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).get_text().strip()
+            elems = l.find_all('li')
+
             if heading != last_heading:
+                if close_ul:
+                    response += '</ul>\n'
+                    close_ul = False
                 if html:
                     response += '<h2>%s</h2>\n' % heading
+                    if elems:
+                        response += '<ul>\n'
+                        close_ul = True
                 else:
                     response += '## %s\n' % heading
                 last_heading = heading
 
-            elems = l.find_all('li')
-            if elems and html:
-                response += '<ul>\n'
             for i in elems:
                 text = i.get_text().strip()
                 a = i.find('a')
@@ -56,9 +62,9 @@ try:
                         response += '<li><a href="%s">%s</a></li>\n' % (href, text)
                     else:
                         response += '* %s  \n  %s\n' % (text, href)
-            if elems and html:
-                response += '</ul>\n'
             response += '\n'
+        if close_ul:
+            response += '</ul>\n'
 
         return response
 

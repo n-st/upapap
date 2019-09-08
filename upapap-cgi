@@ -25,12 +25,15 @@ try:
 
         content = soup.find('main')
 
+        last_heading = ""
         for l in content.find_all('ul'):
             heading = l.find_previous(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).get_text().strip()
-            if html:
-                response += '<h2>%s</h2>\n' % heading
-            else:
-                response += '## %s\n' % heading
+            if heading != last_heading:
+                if html:
+                    response += '<h2>%s</h2>\n' % heading
+                else:
+                    response += '## %s\n' % heading
+                last_heading = heading
 
             elems = l.find_all('li')
             if elems and html:

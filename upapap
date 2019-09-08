@@ -31,7 +31,7 @@ def parse_lolol(soup):
                 print('* %s  ' % (text))
             else:
                 href = i.find('a').attrs['href']
-                if not href.startswith('http://'):
+                if not href.startswith('http://') and not href.startswith('https://'):
                     href = 'http://www.fim.uni-passau.de/' + href
                 print('* %s  \n  %s' % (text, href))
         print()

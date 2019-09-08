@@ -44,7 +44,7 @@ try:
                         response += '* %s  \n' % (text)
                 else:
                     href = i.find('a').attrs['href']
-                    if not href.startswith('http://'):
+                    if not href.startswith('http://') and not href.startswith('https://'):
                         href = 'http://www.fim.uni-passau.de/' + href
                     if html:
                         response += '<li><a href="%s">%s</a></li>\n' % (href, text)

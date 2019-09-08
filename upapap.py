@@ -98,7 +98,7 @@ def feed_handler(handler):
 
 
 def main():
-    handler = Markdown()
+        handler = Markdown()
     feed_handler(handler)
     print(handler.response)
 

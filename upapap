@@ -18,13 +18,16 @@ def parse_lolol(soup):
     
     pagetitle = soup.find('header', {'class': 'h1'}).find('h1').get_text()
     print('# %s' % pagetitle)
-    print()
     
     content = soup.find('main')
 
+    last_heading = ""
     for l in content.find_all('ul'):
         heading = l.find_previous(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).get_text()
-        print('## %s' % heading)
+        if heading != last_heading:
+        	print()
+        	print('## %s' % heading)
+        	last_heading = heading
         for i in l.find_all('li'):
             text = i.get_text()
             a = i.find('a')
@@ -37,7 +40,7 @@ def parse_lolol(soup):
                         href = '/' + href
                     href = 'https://www.fim.uni-passau.de' + href
                 print('* %s  \n  %s' % (text, href))
-        print()
+    print()
 
 def main():
     for url in urls:

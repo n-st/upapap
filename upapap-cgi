@@ -14,7 +14,7 @@ try:
 
         response = ''
 
-        pagetitle = soup.find('header', {'class': 'up-page-content-pagetitle'}).find('h1').get_text().strip()
+        pagetitle = soup.find('header', {'class': 'h1'}).find('h1').get_text().strip()
         if html:
             response += '<a href="%s"><h1>%s</h1></a>\n' % (url, pagetitle)
         else:
@@ -22,7 +22,7 @@ try:
             response += '%s\n' % url
         response += '\n'
 
-        content = soup.find('div', {'class': 'up-page-content-column-center'})
+        content = soup.find('main')
 
         for l in content.find_all('ul'):
             heading = l.find_previous(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).get_text().strip()

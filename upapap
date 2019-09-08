@@ -15,11 +15,11 @@ urls = [
 def parse_lolol(soup):
     """Parse list of lists of links. Requires full page soup as input."""
     
-    pagetitle = soup.find('header', {'class': 'up-page-content-pagetitle'}).find('h1').get_text()
+    pagetitle = soup.find('header', {'class': 'h1'}).find('h1').get_text()
     print('# %s' % pagetitle)
     print()
     
-    content = soup.find('div', {'class': 'up-page-content-column-center'})
+    content = soup.find('main')
 
     for l in content.find_all('ul'):
         heading = l.find_previous(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).get_text()

@@ -66,8 +66,10 @@ try:
         'https://www.fim.uni-passau.de/studium/pruefungsordnungen/',
     ]
 
-    script_name = os.environ['SCRIPT_NAME']
-    html = script_name.endswith('.html')
+    html = False
+    if 'SCRIPT_NAME' in os.environ:
+        script_name = os.environ['SCRIPT_NAME']
+        html = script_name.endswith('.html')
 
     response = ''
     for url in urls:

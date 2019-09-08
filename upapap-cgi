@@ -47,7 +47,7 @@ try:
                     if not href.startswith('http://') and not href.startswith('https://'):
                         if not href.startswith('/'):
                             href = '/' + href
-                        href = 'https://www.fim.uni-passau.de/' + href
+                        href = 'https://www.fim.uni-passau.de' + href
                     if html:
                         response += '<li><a href="%s">%s</a></li>\n' % (href, text)
                     else:

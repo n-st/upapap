@@ -6,7 +6,7 @@ import abc
 import requests
 from bs4 import BeautifulSoup
 
-__all__ = ["URLS", "Callback", "Markdown", "parse_lolol", "feed_handler"]
+__all__ = ["URLS", "Callback", "Markdown", "HTML", "parse_lolol", "feed_handler"]
 
 URLS = [
     'https://www.fim.uni-passau.de/studium/modulkataloge/',
@@ -60,6 +60,37 @@ class Markdown(Callback):
 
     def handle_end(self):
         pass
+
+
+class HTML(Callback):
+    def __init__(self):
+        self.response = ""
+        self.last_heading = ""
+        self.in_ul = False
+
+    def handle_page_title(self, url, pagetitle):
+        if self.response:
+            self.response += '\n'
+        self.response += '<h1><a href="%s">%s</a></h1>\n' % (url, pagetitle)
+
+    def handle_section_title(self, heading):
+        if self.last_heading != heading:
+            if self.in_ul:
+                self.response += '</ul>\n'
+            self.response += '\n<h2>%s</h2>\n' % heading
+            self.response += '<ul>\n'
+            self.in_ul = True
+        self.last_heading = heading
+
+    def handle_entry(self, href, text):
+        if href:
+            self.response += '<li><a href="%s">%s</a></li>\n' % (href, text)
+        else:
+            self.response += '<li>%s</li>\n' % text
+
+    def handle_end(self):
+        if self.in_ul:
+            self.response += '</ul>\n'
 
 
 def parse_lolol(url, soup, handler):

@@ -2,6 +2,7 @@
 # encoding: utf-8 (as per PEP 263)
 
 import abc
+import sys
 
 import requests
 from bs4 import BeautifulSoup
@@ -129,6 +130,9 @@ def feed_handler(handler):
 
 
 def main():
+    if "--html" in sys.argv:
+        handler = HTML()
+    else:
         handler = Markdown()
     feed_handler(handler)
     print(handler.response)
